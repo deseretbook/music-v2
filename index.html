@@ -56,15 +56,6 @@
 
 </head>
 <body>
-<div id="tutorial-switch-bar" style="position:sticky;top:0;z-index:99999;display:flex;align-items:center;justify-content:center;gap:10px;padding:10px 16px;background:#1c1c28;color:#fff;font:600 13px/1.3 -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;">
-  <span>Tutorial Mode</span>
-  <label style="position:relative;display:inline-block;width:40px;height:22px;cursor:pointer;">
-    <input type="checkbox" id="tutorial-switch-checkbox" style="opacity:0;width:0;height:0;">
-    <span id="tutorial-switch-track" style="position:absolute;inset:0;background:#4a4a5a;border-radius:22px;transition:background .15s;"></span>
-    <span id="tutorial-switch-thumb" style="position:absolute;top:2px;left:2px;width:18px;height:18px;background:#fff;border-radius:50%;transition:transform .15s;"></span>
-  </label>
-  <span id="tutorial-switch-state" style="min-width:28px;opacity:.75;">Off</span>
-</div>
 <x-dc>
 <helmet>
 <style>/* Deseret Bookshelf+ — Web font substitutes.
@@ -10912,48 +10903,4 @@ class Component extends DCLogic {
 }
 </script>
 
-
-<script>
-(function() {
-  var checkbox = document.getElementById('tutorial-switch-checkbox');
-  var track = document.getElementById('tutorial-switch-track');
-  var thumb = document.getElementById('tutorial-switch-thumb');
-  var stateLabel = document.getElementById('tutorial-switch-state');
-
-  function paint(on) {
-    track.style.background = on ? '#0c958b' : '#4a4a5a';
-    thumb.style.transform = on ? 'translateX(18px)' : 'translateX(0)';
-    stateLabel.textContent = on ? 'On' : 'Off';
-  }
-
-  function whenRuntimeReady(cb, tries) {
-    tries = tries || 0;
-    if (window.__dcSetProps && window.__dcRootName) { cb(); return; }
-    if (tries > 400) { console.error('[tutorial-switch] dc-runtime never became available'); return; }
-    setTimeout(function() { whenRuntimeReady(cb, tries + 1); }, 50);
-  }
-
-  function applyTutorial(on) {
-    whenRuntimeReady(function() {
-      window.__dcSetProps(window.__dcRootName(), { tutorial: on });
-    });
-  }
-
-  checkbox.addEventListener('change', function() {
-    paint(checkbox.checked);
-    applyTutorial(checkbox.checked);
-  });
-
-  whenRuntimeReady(function() {
-    var name = window.__dcRootName();
-    var entry = window.__dcRegistry && window.__dcRegistry[name];
-    var meta = entry && entry.propsMeta;
-    var def = meta && meta.tutorial && typeof meta.tutorial.default === 'boolean'
-      ? meta.tutorial.default
-      : false;
-    checkbox.checked = def;
-    paint(def);
-  });
-})();
-</script>
 </body></html>
